@@ -31,6 +31,6 @@ conman/
 
 ## Requirements
 - Python 3.6+ (tested on Python 3.x)
-- Flask (pip install flask or apt install python3-flask)
+- Flask (`pip install flask` or `apt install python3-flask`)
 - sudo privileges for the user running ConMan (needed for user creation, SSH key management).
 - ss or netstat to list active SSH connections.
