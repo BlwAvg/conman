@@ -1,6 +1,6 @@
 # ConMan
 
-A simple, web-based SSH connection manager (ConMan) built with Python and Flask. ConMan enables you to:
+A horrible, web-based SSH connection manager (ConMan) built with Python and Flask. ConMan enables you to:
 - View active SSH connections.
 - Manage system users and SSH keys.
 - Configure basic application settings.
