@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""
-ConMan: A simple SSH connection manager (proof of concept).
-
-New in this version:
-- Dedicated 'logs/' folder for log output.
-- Separate pages for 'Connections Dashboard', 'Manage Connections', and 'Settings'.
-- Extra options for SSH key generation (encryption type, key length).
-- Still no login screen or authentication (use caution in production!).
-"""
 
 import os
 import subprocess

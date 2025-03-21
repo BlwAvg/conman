@@ -3,15 +3,24 @@
 # stop.sh - Stop ConMan Flask service
 #
 
+# Get the directory where this script is located (conman/scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
 
-if [ -f conman.pid ]; then
-    PID=$(cat conman.pid)
+# The project root (parent of scripts directory)
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Logs directory under project root
+LOG_DIR="${PROJECT_ROOT}/logs"
+PID_FILE="${LOG_DIR}/conman.pid"
+
+cd "$PROJECT_ROOT"
+
+if [ -f "$PID_FILE" ]; then
+    PID=$(cat "$PID_FILE")
     echo "Stopping ConMan with PID $PID..."
     kill "$PID"
-    rm conman.pid
+    rm "$PID_FILE"
     echo "ConMan stopped."
 else
-    echo "No conman.pid found. Is ConMan running?"
+    echo "No conman.pid found in ${LOG_DIR}. Is ConMan running?"
 fi
