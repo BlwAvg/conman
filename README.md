@@ -11,7 +11,7 @@ A horrible, web-based SSH connection manager (ConMan) built with Python and Flas
 - sudo privileges for the user running ConMan (needed for user creation, SSH key management).
 - ss or netstat to list active SSH connections.
 
-# Run the application
+## Run the application
 run the start.sh script in the scripts directory.
 - My have to run as root? I will figure out permissions needed at some point.
 - Do not forget to add execute permissions to scripts `chmod +x scripts/*`
@@ -19,9 +19,9 @@ run the start.sh script in the scripts directory.
 ## Folder Structure
 ```
 conman/
-├── conman.py              (Main Flask web application)
+├── conman.py               Main application
 ├── logs/
-│   └── conman.log
+│   └── conman.log          Logs from the default webserver
 ├── static/
 │   ├── css/
 │   │   └── style.css
@@ -30,14 +30,17 @@ conman/
 │   │   ├── dashboard.js
 │   │   ├── manage.js
 │   │   └── settings.js
-├── templates/
+├── templates/              Base HTML pages
 │   ├── base.html
 │   ├── dashboard.html
 │   ├── manage.html
 │   └── settings.html
-├── scripts/
+├── scripts/                Used for storing scripts for making life easier. 
 |   ├── start.sh
-|   └── stop.sh
+|   ├── stop.sh
+|   └── Other helpful scripts stored here
 ```
 
 
+# Troubleshooting
+The app doesnt work right now. Need to add debugging code to figure out what the hell is going on. I also need to learn how to code.
