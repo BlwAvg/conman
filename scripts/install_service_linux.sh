@@ -8,7 +8,7 @@ SERVICE_FILE="/etc/systemd/system/conman.service"
 
 # Path to your conman "start.sh" script
 # Adjust this to the actual, absolute path on your server:
-CONMAN_START_SCRIPT="/path/to/conman/scripts/start.sh"
+CONMAN_START_SCRIPT="/path/to/conman/scripts/start.sh --host 127.0.0.1 --port 5000 --debug y"
 
 # Linux user to run ConMan as:
 RUN_AS_USER="root"
