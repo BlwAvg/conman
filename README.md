@@ -5,6 +5,17 @@ A horrible, web-based SSH connection manager (ConMan) built with Python and Flas
 - Manage system users and SSH keys.
 - Configure basic application settings.
 
+## Requirements
+- Python 3.6+ (tested on Python 3.x)
+- Flask (`pip install flask` or `apt install python3-flask`)
+- sudo privileges for the user running ConMan (needed for user creation, SSH key management).
+- ss or netstat to list active SSH connections.
+
+# Run the application
+run the start.sh script in the scripts directory.
+- My have to run as root? I will figure out permissions needed at some point.
+- Do not forget to add execute permissions to scripts `chmod +x scripts/*`
+
 ## Folder Structure
 ```
 conman/
@@ -29,8 +40,4 @@ conman/
 |   └── stop.sh
 ```
 
-## Requirements
-- Python 3.6+ (tested on Python 3.x)
-- Flask (`pip install flask` or `apt install python3-flask`)
-- sudo privileges for the user running ConMan (needed for user creation, SSH key management).
-- ss or netstat to list active SSH connections.
+
