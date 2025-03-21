@@ -3,8 +3,10 @@
 import os
 import subprocess
 import json
+import argparse
 from flask import Flask, request, jsonify, render_template
 
+# Webserver folder locations
 app = Flask(__name__, 
             static_folder='static',
             template_folder='templates')
@@ -243,9 +245,24 @@ def api_settings():
 
 
 ##############################################################################
-# Main Entry
+# Main Entry - This is the trash webserver.
 ##############################################################################
+# Command-line switches to specify the server's bind address, port, and debug mode.
 
 if __name__ == '__main__':
-    # In a real deployment, you'd run under a WSGI server or similar
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Create an argument parser for command-line options
+    parser = argparse.ArgumentParser(description='Connection Manager Webserver')
+    parser.add_argument('--host', default='0.0.0.0',
+                        help='Host/IP to bind to (default: 0.0.0.0)')
+    parser.add_argument('--port', type=int, default=5000,
+                        help='Port to bind to (default: 5000)')
+    parser.add_argument('--debug', action='store_true',
+                        help='Enable Flask debug mode')
+
+    args = parser.parse_args()
+
+    # Start Flask with the specified or default host, port, and debug settings
+    app.run(host=args.host, port=args.port, debug=args.debug)
+
+    # Start Flask with the specified or default host, port, and debug settings
+    app.run(host=args.host, port=args.port, debug=args.debug)
