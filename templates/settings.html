@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Settings</h1>
+
+<button id="loadSettingsBtn">Load Settings</button>
+<br><br>
+<label>Theme:</label>
+<input type="text" id="themeInput" placeholder="default/dark/etc">
+<br>
+<button id="saveSettingsBtn">Save Settings</button>
+<p id="settingsMsg"></p>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endblock %}

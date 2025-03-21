@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Connections Dashboard</h1>
+
+<button id="refreshBtn">Refresh Connections</button>
+<table id="connectionsTable" border="1">
+    <thead>
+        <tr>
+            <th>State</th>
+            <th>Local Address</th>
+            <th>Remote Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populated by JS -->
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

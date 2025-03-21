@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Manage Connections</h1>
+
+<!-- Create System User -->
+<section>
+    <h2>Create System User</h2>
+    <input type="text" id="newUsername" placeholder="New Username">
+    <button id="createUserBtn">Create User</button>
+    <p id="createUserMsg"></p>
+</section>
+
+<!-- Generate SSH Key Pair -->
+<section>
+    <h2>Generate SSH Key Pair</h2>
+    <label for="keyUsername">Username:</label>
+    <input type="text" id="keyUsername">
+    <br>
+    <label for="keyType">Key Type:</label>
+    <select id="keyType">
+        <option value="rsa" selected>RSA</option>
+        <option value="ecdsa">ECDSA</option>
+        <option value="ed25519">ED25519</option>
+    </select>
+    <br>
+    <label for="keyBits">Key Length:</label>
+    <input type="number" id="keyBits" value="2048">
+    <br>
+    <button id="generateKeyBtn">Generate Key</button>
+    <p id="keyGenMsg"></p>
+</section>
+
+<!-- Add Authorized Key -->
+<section>
+    <h2>Add Authorized Key</h2>
+    <label for="authKeyUsername">Username:</label>
+    <input type="text" id="authKeyUsername">
+    <br>
+    <label for="authKey">Public Key:</label>
+    <br>
+    <textarea id="authKey" rows="4" cols="60" placeholder="Paste public key here"></textarea>
+    <br>
+    <button id="addAuthKeyBtn">Add to Authorized Keys</button>
+    <p id="addAuthKeyMsg"></p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/manage.js') }}"></script>
+{% endblock %}
