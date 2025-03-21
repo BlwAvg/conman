@@ -101,5 +101,30 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             addAuthKeyMsg.textContent = 'Request failed.';
         }
+
+    // -- Open New SSH Port --
+    const openPortBtn = document.getElementById('openPortBtn');
+    const newPortInput = document.getElementById('newPortInput');
+    const openPortMsg = document.getElementById('openPortMsg');
+
+    openPortBtn.addEventListener('click', async () => {
+        const port = newPortInput.value.trim();
+        if (!port) {
+            openPortMsg.textContent = 'Port number is required.';
+            return;
+        }
+        openPortMsg.textContent = `Opening port ${port}...`;
+        try {
+            const response = await postJSON('/api/port', { port });
+            if (response.ok) {
+                const data = await response.json();
+                openPortMsg.textContent = data.message || 'Port opened.';
+            } else {
+                const errorData = await response.json();
+                openPortMsg.textContent = errorData.error || 'Error opening port.';
+            }
+        } catch (err) {
+            openPortMsg.textContent = 'Request failed.';
+        }
     });
 });

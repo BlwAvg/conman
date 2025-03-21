@@ -3,6 +3,7 @@
 import os
 import subprocess
 import json
+import re
 import argparse
 from flask import Flask, request, jsonify, render_template
 
@@ -18,8 +19,7 @@ app = Flask(__name__,
 
 def get_active_ssh_connections():
     """
-    Retrieve information about active SSH sessions (specifically reverse
-    or inbound SSH connections) by parsing output from 'ss' or 'netstat'.
+    Retrieve information about active SSH sessions using 'ss'.
     """
     try:
         result = subprocess.run(["ss", "-tanp"], capture_output=True, text=True)
@@ -115,6 +115,68 @@ def add_authorized_key(username, public_key):
         print(f"Error adding authorized key for {username}: {e}")
         return False
 
+def open_ssh_port(port):
+    """
+    Modify /etc/ssh/sshd_config to include 'Port <port>' if not already present,
+    open that port in firewall (ufw), then reload ssh service.
+    
+    Returns:
+      - (True, message) on success
+      - (False, error_message) on failure
+    """
+    # Validate port is numeric and in a reasonable range
+    if not re.match(r'^\d+$', str(port)):
+        return False, f"Invalid port '{port}'."
+    port_num = int(port)
+    if port_num < 1 or port_num > 65535:
+        return False, f"Port number out of range: {port_num}"
+
+    ssh_config_path = "/etc/ssh/sshd_config"
+
+    # 1) Add 'Port <port>' if not exists
+    try:
+        with open(ssh_config_path, "r") as f:
+            config_lines = f.readlines()
+    except FileNotFoundError:
+        return False, "sshd_config not found at /etc/ssh/sshd_config."
+
+    # Check if port line already exists
+    port_line = f"Port {port_num}\n"
+    if port_line in config_lines:
+        # Port is already configured
+        pass
+    else:
+        # Append the new Port line
+        try:
+            with open(ssh_config_path, "a") as f:
+                f.write(f"\nPort {port_num}\n")
+        except Exception as e:
+            return False, f"Failed to write to sshd_config: {e}"
+
+    # 2) Open firewall port using ufw (if installed)
+    #    We do a quick check for 'ufw' command. 
+    #    If it doesn't exist, skip. In a real environment, handle iptables/firewalld accordingly.
+    ufw_path = subprocess.run(["which", "ufw"], capture_output=True, text=True).stdout.strip()
+    if ufw_path:
+        # Attempt: sudo ufw allow <port_num>/tcp
+        # We won't check if it's already allowed, for brevity.
+        try:
+            subprocess.run(["sudo", "ufw", "allow", f"{port_num}/tcp"], check=True)
+        except subprocess.CalledProcessError as e:
+            return False, f"Failed to open port {port_num} in ufw: {e}"
+
+    # 3) Reload SSH to apply changes
+    try:
+        # Debian/Ubuntu might use 'sudo systemctl reload ssh' or 'sudo service ssh reload'
+        # We'll attempt systemctl first, then fallback to service
+        result = subprocess.run(["sudo", "systemctl", "reload", "ssh"], capture_output=True)
+        if result.returncode != 0:
+            # fallback
+            subprocess.run(["sudo", "service", "ssh", "reload"], check=True)
+    except subprocess.CalledProcessError as e:
+        return False, f"Failed to reload ssh service: {e}"
+
+    return True, f"SSH is now listening on port {port_num} (assuming no errors)."
 
 ##############################################################################
 # Page Routes
@@ -242,6 +304,24 @@ def api_settings():
         with open(settings_file, 'w') as f:
             json.dump(data, f)
         return jsonify({"message": "Settings updated"}), 200
+
+
+@app.route('/api/port', methods=['POST'])
+def api_open_port():
+    """
+    Configure a new SSH port in /etc/ssh/sshd_config and open the firewall.
+    Expected JSON: { "port": "2222" }
+    """
+    data = request.json
+    if not data or "port" not in data:
+        return jsonify({"error": "Missing 'port'"}), 400
+
+    port = data["port"]
+    success, msg = open_ssh_port(port)
+    if success:
+        return jsonify({"message": msg}), 200
+    else:
+        return jsonify({"error": msg}), 500
 
 
 ##############################################################################
